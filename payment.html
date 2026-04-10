@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Payment</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #f5f5f5;
+    text-align: center;
+    padding: 30px;
+}
+
+.box {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    max-width: 350px;
+    margin: auto;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.option {
+    text-align: left;
+    margin: 10px 0;
+}
+
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 5px 0;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h1>💳 Payment</h1>
+
+<h3 id="product"></h3>
+<h2 id="price"></h2>
+
+<div class="option">
+    <input type="radio" name="pay" value="cod" checked> Cash on Delivery (COD)
+</div>
+
+<div class="option">
+    <input type="radio" name="pay" value="upi"> Pay via UPI / PhonePe / Paytm
+</div>
+
+<p id="upi-text" style="display:none;">
+    👉 Aap kisi bhi UPI app se payment kar sakte ho
+</p>
+
+<h3>📍 Delivery Address</h3>
+
+<input id="name" placeholder="Full Name">
+<input id="phone" placeholder="Mobile Number">
+<input id="address" placeholder="Full Address">
+<input id="city" placeholder="City">
+<input id="pincode" placeholder="Pincode">
+
+<button onclick="placeOrder()">Place Order</button>
+
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+
+const name = params.get("name");
+const price = params.get("price");
+
+function payNow() {
+
+    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+    orders.push({
+        name: name,
+        price: price,
+        status: "Pending"
+    });
+
+    localStorage.setItem("orders", JSON.stringify(orders));
+
+    alert("Payment Successful 🎉");
+
+    window.location.href = "orders.html";
+}
+</script>
+
+document.getElementById("product").innerText = productName;
+document.getElementById("price").innerText = "₹" + price;
+
+// UPI text toggle
+document.querySelectorAll('input[name="pay"]').forEach(radio => {
+    radio.addEventListener("change", function() {
+        document.getElementById("upi-text").style.display =
+            this.value === "upi" ? "block" : "none";
+    });
+});
+
+function placeOrder() {
+
+    let method = document.querySelector('input[name="pay"]:checked').value;
+
+    let nameInput = document.getElementById("name").value;
+    let phone = document.getElementById("phone").value;
+    let address = document.getElementById("address").value;
+    let city = document.getElementById("city").value;
+    let pincode = document.getElementById("pincode").value;
+
+    if(nameInput === "" || phone === "" || address === "" || city === "" || pincode === ""){
+        alert("Please fill all details ❗");
+        return;
+    }
+
+    // 👉 SAVE ADDRESS
+    localStorage.setItem("userAddress", JSON.stringify({
+        name: nameInput,
+        phone: phone,
+        address: address,
+        city: city,
+        pincode: pincode
+    }));
+
+    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+    orders.push({
+        product: productName,
+        price: price,
+        payment: method,
+        status: "Pending",
+        address: address + ", " + city + " - " + pincode
+    });
+
+    localStorage.setItem("orders", JSON.stringify(orders));
+
+    localStorage.removeItem("cart");
+
+    window.location.href = "success.html";
+}
+window.onload = function() {
+
+    let saved = JSON.parse(localStorage.getItem("userAddress"));
+
+    if(saved) {
+        document.getElementById("name").value = saved.name;
+        document.getElementById("phone").value = saved.phone;
+        document.getElementById("address").value = saved.address;
+        document.getElementById("city").value = saved.city;
+        document.getElementById("pincode").value = saved.pincode;
+    }
+
+}
+
+<script>
+function payNow() {
+
+    fetch("https://script.google.com/macros/s/AKfycby5FGV2k_lJtzrVVUrs0LBnOeEEqbUkaAyQz1qkB71kOQJ6hc3P-uLbvcmCDmiXp6TwkA/exec", {
+        method: "POST",
+        body: JSON.stringify({
+            name: name,
+            price: price
+        })
+    });
+
+    alert("Order placed successfully ✅");
+
+    window.location.href = "success.html";
+}
+</script>
+
+</script>
+
+</body>
+</html>

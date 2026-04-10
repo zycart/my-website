@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earbuds - ZyCart</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            display: flex;
+            gap: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+       .image-box {
+    flex: 1;
+    text-align: center;
+}
+
+#main-img {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 10px;
+}
+
+.thumbs {
+    margin-top: 15px;
+}
+
+.thumbs img {
+    width: 60px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: 2px solid transparent;
+}
+
+.thumbs img:hover {
+    border: 2px solid #667eea;
+}
+
+        .details {
+            flex: 1;
+        }
+
+        .details h1 {
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 2em;
+            color: #e74c3c;
+            margin: 20px 0;
+        }
+
+        .desc {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .cart {
+            background: #667eea;
+            color: white;
+        }
+
+        .buy {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .back {
+            background: #ccc;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        @media(max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+    }
+        .product-image img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+    </style>
+</head>
+
+<body>
+
+    <div class="header">🛒 ZyCart</div>
+
+    <div class="container">
+
+    <div class="image-box">
+
+    <!-- Main Image -->
+    <img id="main-img" src="earbuds1.jpg">
+
+    <!-- Thumbnails -->
+    <div class="thumbs">
+        <img src="earbuds2.jpg" onclick="changeImage(this)">
+        <img src="earbuds4.jpg" onclick="changeImage(this)">
+        <img src="earbuds3.jpg" onclick="changeImage(this)">
+    </div>
+
+        <div class="details">
+           <h1>Earbuds</h1>
+         <div class="price">₹499</div>
+
+           <p class="desc">
+    Yeh high-quality wireless earbuds hain jo clear sound aur deep bass provide karte hain.
+    Inme long battery life hai aur comfortable fit ke saath daily use ke liye perfect hain.
+    Music, calling aur gaming ke liye best choice.
+</p>
+
+<h3>⭐ Rate this product</h3>
+
+<select id="rating">
+    <option value="5">⭐⭐⭐⭐⭐</option>
+    <option value="4">⭐⭐⭐⭐</option>
+    <option value="3">⭐⭐⭐</option>
+    <option value="2">⭐⭐</option>
+    <option value="1">⭐</option>
+</select>
+
+<br><br>
+
+<textarea id="review" placeholder="Write your review..." style="width:100%; padding:10px;"></textarea>
+
+<br><br>
+
+<button class="btn" onclick="submitReview()">Submit Review</button>
+
+<h3>📝 Reviews</h3>
+<div id="reviews"></div>
+            <button class="btn cart" onclick="addToCart()">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow()">Buy Now</button>
+            <button class="btn back" onclick="goBack()">⬅ Back</button>
+       <button class="btn" onclick="addToWishlist()">❤️ Add to Wishlist</button>
+ </div>
+
+    </div>
+
+   <script>
+function addToCart() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+ cart.push({ name: "EarBuds", price: 499, image: "earbuds1.jpg"});
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    alert("EarBuds added to cart 🛒");
+}
+
+function buyNow() {
+   window.location.href = "payment.html?name=Earbuds&price=499";
+}
+
+function goBack() {
+    window.location.href = "index.html";
+}
+function changeImage(img) {
+    document.getElementById("main-img").src = img.src;
+}
+function addToWishlist() {
+    let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+    wishlist.push({name: "EarBuds", price: 499});
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    alert("Added to Wishlist ❤️");
+}
+
+const productName = "Ear Buds";
+
+function submitReview() {
+    let rating = document.getElementById("rating").value;
+    let review = document.getElementById("review").value;
+
+    let reviews = JSON.parse(localStorage.getItem(earBuds)) || [];
+
+    reviews.push({
+        rating: rating,
+        text: review
+    });
+
+    localStorage.setItem(earBuds, JSON.stringify(reviews));
+
+    alert("Review added ⭐");
+
+    loadReviews();
+}
+
+function loadReviews() {
+    let reviews = JSON.parse(localStorage.getItem(earBuds)) || [];
+    let html = "";
+
+    reviews.forEach(r => {
+        html += `
+        <div style="background:#f5f5f5; padding:10px; margin:10px 0; border-radius:10px;">
+            <p>${"⭐".repeat(r.rating)}</p>
+            <p>${r.text}</p>
+        </div>
+        `;
+    });
+
+    document.getElementById("reviews").innerHTML = html;
+}
+
+loadReviews();
+</script>
+
+</body>
+</html>

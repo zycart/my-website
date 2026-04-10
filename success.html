@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+    font-family: Arial;
+    text-align: center;
+    padding: 50px;
+    background: #f5f5f5;
+}
+
+.box {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 350px;
+    margin: auto;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+h1 {
+    color: green;
+}
+
+button {
+    padding: 12px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.orders {
+    background: #667eea;
+    color: white;
+}
+
+.home {
+    background: #ccc;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h1>✅ Order Confirmed!</h1>
+
+<p>Your order has been placed successfully 🎉</p>
+<p>Delivery within 3-5 days 🚚</p>
+
+<br>
+
+<button class="orders" onclick="goOrders()">📦 View Orders</button>
+<br>
+<button class="home" onclick="goHome()">🏠 Home</button>
+
+</div>
+
+<script>
+function goHome() {
+    window.location.href = "index.html";
+}
+
+function goOrders() {
+    window.location.href = "orders.html";
+}
+</script>
+
+</body>
+</html>

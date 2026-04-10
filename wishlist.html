@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial; padding:20px; background:#f5f5f5;">
+
+<h1 style="text-align:center;">❤️ Wishlist</h1>
+
+<div id="items"></div>
+
+<script>
+let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+function loadWishlist() {
+
+    let html = "";
+
+    if(wishlist.length === 0) {
+        html = "<p style='text-align:center;'>Wishlist is empty 😢</p>";
+    } else {
+
+        wishlist.forEach((item, index) => {
+            html += `
+                <div style="
+                    background:white;
+                    padding:15px;
+                    margin:10px 0;
+                    border-radius:10px;
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                ">
+                    <div>
+                        <b>${item.name}</b><br>
+                        ₹${item.price}
+                    </div>
+
+                    <div>
+                        <button onclick="moveToCart(${index})">🛒</button>
+                        <button onclick="removeItem(${index})">❌</button>
+                    </div>
+                </div>
+            `;
+        });
+
+    }
+
+    document.getElementById("items").innerHTML = html;
+}
+
+function removeItem(index) {
+    wishlist.splice(index, 1);
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    loadWishlist();
+}
+
+function moveToCart(index) {
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    cart.push(wishlist[index]);
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    removeItem(index);
+
+    alert("Moved to Cart 🛒");
+}
+
+loadWishlist();
+</script>
+
+</body>
+</html>
