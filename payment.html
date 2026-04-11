@@ -146,6 +146,8 @@ function placeOrder() {
     const city = document.getElementById("city").value;
     const pincode = document.getElementById("pincode").value;
 
+    const paymentMethod = document.querySelector('input[name="pay"]:checked').value;
+    
     if(!name || !phone || !address || !city || !pincode){
         alert("Please fill all details ❌");
         return;
@@ -155,17 +157,21 @@ function placeOrder() {
     localStorage.setItem("userAddress", JSON.stringify(userAddress));
 
     if(!productName || !productPrice){
-        alert("Product data missing ❌");
+        alert("Please fill all details ❌");
         return;
     }
 
     let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-    orders.push({
-        name: productName,
+   orders.push({
+        product: productName,
         price: productPrice,
-        status: "Pending"
+        payment: paymentMethod,
+        address: `${address}, ${city} - ${pincode}`,
+        status: "Pending",
+        rating: ""
     });
+
 
     localStorage.setItem("orders", JSON.stringify(orders));
 
