@@ -224,7 +224,6 @@
             Buy Now
         </button>
     </div>
-<button onclick="logout()">Logout</button>
 
 <script>
 if(!localStorage.getItem("user")) {
@@ -288,6 +287,7 @@ function logout() {
     localStorage.removeItem("user");
     window.location.href = "login.html";
 }
+<button onclick="logout()">Logout</button>
 </script>
 
 </body>
