@@ -225,6 +225,26 @@
         </button>
     </div>
 
+<div style="
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:white;
+display:flex;
+justify-content:space-around;
+padding:10px;
+box-shadow:0 -2px 10px rgba(0,0,0,0.1);
+">
+
+<button onclick="location.href='index.html'">🏠Home</button>
+<button onclick="location.href='wishlist.html'">❤️Wishlist</button>
+<button onclick="location.href='cart.html'">🛒Cart</button>
+<button onclick="location.href='orders.html'">📦My Orders</button>
+<button onclick="location.href='account.html'">👤 Account</button>
+<button onclick="logout()">Logout</button>
+</div>
+
 <script>
 if(!localStorage.getItem("user")) {
     window.location.href = "login.html";
@@ -248,25 +268,6 @@ function openCart() {
     window.location.href = "cart.html";
 }
 
-<div style="
-position:fixed;
-bottom:0;
-left:0;
-width:100%;
-background:white;
-display:flex;
-justify-content:space-around;
-padding:10px;
-box-shadow:0 -2px 10px rgba(0,0,0,0.1);
-">
-
-<button onclick="location.href='index.html'">🏠Home</button>
-<button onclick="location.href='wishlist.html'">❤️Wishlist</button>
-<button onclick="location.href='cart.html'">🛒Cart</button>
-<button onclick="location.href='orders.html'">📦My Orders</button>
-<button onclick="location.href='account.html'">👤 Account</button>
-<button onclick="logout()">Logout</button>
-</div>
 
 function searchProduct() {
     let input = document.getElementById("search").value.toLowerCase();
