@@ -68,7 +68,6 @@ button {
     <input type="radio" name="pay" value="upi"> Pay via UPI / PhonePe / Paytm
 </div>
 
-<!-- UPI QR BOX -->
 <div id="upi-box">
     <h3>📱 Scan & Pay</h3>
     <img id="qr" width="200">
@@ -89,29 +88,27 @@ button {
 
 <script>
 
-// URL se product data
+// PRODUCT DATA
 const params = new URLSearchParams(window.location.search);
 const productName = params.get("name");
 const productPrice = params.get("price");
 
-// UI show
 document.getElementById("product").innerText = productName;
 document.getElementById("price").innerText = "₹" + productPrice;
 
-// ✅ AUTO FILL ADDRESS
+// AUTO FILL
 window.onload = function() {
     const saved = JSON.parse(localStorage.getItem("userAddress"));
-
     if(saved){
-        document.getElementById("name").value = saved.name;
-        document.getElementById("phone").value = saved.phone;
-        document.getElementById("address").value = saved.address;
-        document.getElementById("city").value = saved.city;
-        document.getElementById("pincode").value = saved.pincode;
+        name.value = saved.name;
+        phone.value = saved.phone;
+        address.value = saved.address;
+        city.value = saved.city;
+        pincode.value = saved.pincode;
     }
 };
 
-// UPI toggle
+// UPI TOGGLE
 let upiRadio = document.querySelector('input[value="upi"]');
 let codRadio = document.querySelector('input[value="cod"]');
 let upiBox = document.getElementById("upi-box");
@@ -127,7 +124,6 @@ function showQR() {
     let amount = productPrice;
 
     let upiLink = `upi://pay?pa=${upiID}&pn=${name}&am=${amount}&cu=INR`;
-
     let qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiLink)}`;
 
     document.getElementById("qr").src = qrURL;
@@ -137,7 +133,7 @@ function hideQR() {
     upiBox.style.display = "none";
 }
 
-// ORDER FUNCTION
+// MAIN ORDER FUNCTION
 function placeOrder() {
 
     const name = document.getElementById("name").value;
@@ -147,54 +143,46 @@ function placeOrder() {
     const pincode = document.getElementById("pincode").value;
 
     const paymentMethod = document.querySelector('input[name="pay"]:checked').value;
-    
+
     if(!name || !phone || !address || !city || !pincode){
         alert("Please fill all details ❌");
         return;
     }
 
-const params = new URLSearchParams(window.location.search);
-    const productName = params.get("name");
-    const productPrice = params.get("price");
+    // SAVE ADDRESS
+    localStorage.setItem("userAddress", JSON.stringify({
+        name, phone, address, city, pincode
+    }));
 
-    let message = `🛒 *New Order - ZyCart*%0A%0A
-📦 Product: ${productName}%0A
-💰 Price: ₹${productPrice}%0A%0A
-
-👤 Name: ${name}%0A
-📞 Phone: ${phone}%0A
-🏠 Address: ${address}, ${city}, ${pincode}%0A%0A
-
-🚚 Payment: Cash on Delivery`;
-
-    let whatsappNumber = "919555538841"; 
-
-    let url = `https://wa.me/${whatsappNumber}?text=${message}`;
-
-    window.open(url, "_blank");
-}
-
-    const userAddress = { name, phone, address, city, pincode };
-    localStorage.setItem("userAddress", JSON.stringify(userAddress));
-
-    if(!productName || !productPrice){
-        alert("Please fill all details ❌");
-        return;
-    }
-
+    // SAVE ORDER
     let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-   orders.push({
+    orders.push({
         product: productName,
         price: productPrice,
         payment: paymentMethod,
         address: `${address}, ${city} - ${pincode}`,
-        status: "Pending",
-        rating: ""
+        status: "Pending"
     });
 
-
     localStorage.setItem("orders", JSON.stringify(orders));
+
+    // WHATSAPP MESSAGE
+    let paymentText = paymentMethod === "upi" ? "UPI Payment" : "Cash on Delivery";
+
+    let message = `🛒 *New Order - ZyCart*%0A%0A
+📦 Product: ${productName}%0A
+💰 Price: ₹${productPrice}%0A%0A
+👤 Name: ${name}%0A
+📞 Phone: ${phone}%0A
+🏠 Address: ${address}, ${city}, ${pincode}%0A%0A
+🚚 Payment: ${paymentText}`;
+
+    let whatsappNumber = "919555538841";
+
+    let url = `https://wa.me/${whatsappNumber}?text=${message}`;
+
+    window.open(url, "_blank");
 
     alert("Order Placed ✅");
 
@@ -202,5 +190,6 @@ const params = new URLSearchParams(window.location.search);
 }
 
 </script>
+
 </body>
 </html>
