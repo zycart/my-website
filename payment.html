@@ -80,47 +80,42 @@ button {
 </div>
 
 <script>
-const params = new URLSearchParams(window.location.search);
+window.onload = function() {
 
-const name = params.get("name");
-const price = params.get("price");
+    // URL se data lena
+    const params = new URLSearchParams(window.location.search);
 
-function payNow() {
+    const productName = params.get("name");
+    const productPrice = params.get("price");
 
-    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+    // screen pe show karna
+    document.getElementById("product").innerText = productName;
+    document.getElementById("price").innerText = "₹" + productPrice;
 
-    orders.push({
-        name: name,
-        price: price,
-        status: "Pending"
-    });
+    // button function
+    window.placeOrder = function() {
 
-    localStorage.setItem("orders", JSON.stringify(orders));
+        if(!productName || !productPrice){
+            alert("Product data missing ❌");
+            return;
+        }
 
-    alert("Payment Successful 🎉");
+        let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-    window.location.href = "orders.html";
-}
+        orders.push({
+            name: productName,
+            price: productPrice,
+            status: "Pending"
+        });
 
-}
+        localStorage.setItem("orders", JSON.stringify(orders));
 
-<script>
-function payNow() {
+        alert("✅ Order Placed Successfully!");
 
-    fetch("https://script.google.com/macros/s/AKfycby5FGV2k_lJtzrVVUrs0LBnOeEEqbUkaAyQz1qkB71kOQJ6hc3P-uLbvcmCDmiXp6TwkA/exec", {
-        method: "POST",
-        body: JSON.stringify({
-            name: name,
-            price: price
-        })
-    });
+        window.location.href = "success.html";
+    }
 
-    alert("Order placed successfully ✅");
-
-    window.location.href = "success.html";
-}
-</script>
-
+};
 </script>
 
 </body>
