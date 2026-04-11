@@ -145,7 +145,7 @@
     </style>
 </head>
 <body>
-  <div class=<"header">
+ <div class="header">
     <h1>🛒 ZyCart</h1>
 
    <div style="display:flex; justify-content:center; gap:10px; margin-top:15px;">
@@ -224,8 +224,13 @@
             Buy Now
         </button>
     </div>
+<button onclick="logout()">Logout</button>
 
 <script>
+if(!localStorage.getItem("user")) {
+    window.location.href = "login.html";
+}
+
 function openProduct(product) {
     window.location.href = product + ".html";
 }
@@ -243,10 +248,6 @@ if(cartCount){
 function openCart() {
     window.location.href = "cart.html";
 }
-if(!localStorage.getItem("user")) {
-    window.location.href = "login.html";
-}
-<button onclick="logout()">Logout</button>
 </script>
 
 <div style="
