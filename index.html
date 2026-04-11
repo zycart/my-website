@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<span id="cart-count">0</span>
+<span id="cart-count"></span>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -236,8 +236,10 @@ function buyNow(name, price) {
 
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-document.getElementById("cart-count").innerText = cart.length;
-
+let cartCount = document.getElementById("cart-count");
+if(cartCount){
+    cartCount.innerText = cart.length;
+}
 function openCart() {
     window.location.href = "cart.html";
 }
