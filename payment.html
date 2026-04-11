@@ -43,6 +43,11 @@ button {
     font-weight: bold;
     cursor: pointer;
 }
+
+#upi-box {
+    display: none;
+    margin-top: 20px;
+}
 </style>
 </head>
 
@@ -63,9 +68,12 @@ button {
     <input type="radio" name="pay" value="upi"> Pay via UPI / PhonePe / Paytm
 </div>
 
-<p id="upi-text" style="display:none;">
-    👉 Aap kisi bhi UPI app se payment kar sakte ho
-</p>
+<!-- UPI QR BOX -->
+<div id="upi-box">
+    <h3>📱 Scan & Pay</h3>
+    <img id="qr" width="200">
+    <p>UPI ID: 9555538841@ptyes</p>
+</div>
 
 <h3>📍 Delivery Address</h3>
 
@@ -75,47 +83,68 @@ button {
 <input id="city" placeholder="City">
 <input id="pincode" placeholder="Pincode">
 
-<button onclick="placeOrder()">Place Order</button>
+<button type="button" onclick="placeOrder()">Place Order</button>
 
 </div>
 
 <script>
-window.onload = function() {
+// URL se product data
+const params = new URLSearchParams(window.location.search);
+const productName = params.get("name");
+const productPrice = params.get("price");
 
-    // URL se data lena
-    const params = new URLSearchParams(window.location.search);
+// UI show
+document.getElementById("product").innerText = productName;
+document.getElementById("price").innerText = "₹" + productPrice;
 
-    const productName = params.get("name");
-    const productPrice = params.get("price");
+// UPI toggle
+let upiRadio = document.querySelector('input[value="upi"]');
+let codRadio = document.querySelector('input[value="cod"]');
+let upiBox = document.getElementById("upi-box");
 
-    // screen pe show karna
-    document.getElementById("product").innerText = productName;
-    document.getElementById("price").innerText = "₹" + productPrice;
+upiRadio.addEventListener("change", showQR);
+codRadio.addEventListener("change", hideQR);
 
-    // button function
-    window.placeOrder = function() {
+function showQR() {
+    upiBox.style.display = "block";
 
-        if(!productName || !productPrice){
-            alert("Product data missing ❌");
-            return;
-        }
+    let upiID = "9555538841@ptyes";
+    let name = "ZyCart";
+    let amount = productPrice;
 
-        let orders = JSON.parse(localStorage.getItem("orders")) || [];
+    let upiLink = `upi://pay?pa=${upiID}&pn=${name}&am=${amount}&cu=INR`;
 
-        orders.push({
-            name: productName,
-            price: productPrice,
-            status: "Pending"
-        });
+    let qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiLink)}`;
 
-        localStorage.setItem("orders", JSON.stringify(orders));
+    document.getElementById("qr").src = qrURL;
+}
 
-        alert("✅ Order Placed Successfully!");
+function hideQR() {
+    upiBox.style.display = "none";
+}
 
-        window.location.href = "success.html";
+// ORDER FUNCTION
+function placeOrder() {
+
+    if(!productName || !productPrice){
+        alert("Product data missing ❌");
+        return;
     }
 
-};
+    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+    orders.push({
+        name: productName,
+        price: productPrice,
+        status: "Pending"
+    });
+
+    localStorage.setItem("orders", JSON.stringify(orders));
+
+    alert("Order Placed ✅");
+
+    window.location.href = "success.html";
+}
 </script>
 
 </body>
