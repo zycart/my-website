@@ -126,6 +126,25 @@ function hideQR() {
 // ORDER FUNCTION
 function placeOrder() {
 
+const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const address = document.getElementById("address").value;
+    const city = document.getElementById("city").value;
+    const pincode = document.getElementById("pincode").value;
+
+    // ❗ Validation
+    if(!name || !phone || !address || !city || !pincode){
+        alert("Please fill all details ❌");
+        return;
+    }
+
+    // ✅ Address save
+    const userAddress = {
+        name, phone, address, city, pincode
+    };
+
+    localStorage.setItem("userAddress", JSON.stringify(userAddress));
+
     if(!productName || !productPrice){
         alert("Product data missing ❌");
         return;
@@ -144,6 +163,19 @@ function placeOrder() {
     alert("Order Placed ✅");
 
     window.location.href = "success.html";
+}
+</script>
+
+window.onload = function() {
+    const saved = JSON.parse(localStorage.getItem("userAddress"));
+
+    if(saved){
+        document.getElementById("name").value = saved.name;
+        document.getElementById("phone").value = saved.phone;
+        document.getElementById("address").value = saved.address;
+        document.getElementById("city").value = saved.city;
+        document.getElementById("pincode").value = saved.pincode;
+    }
 }
 </script>
 
