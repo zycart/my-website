@@ -3,6 +3,7 @@
 <span id="cart-count"></span>
 <head>
     <meta charset="UTF-8">
+<meta name="google-site-verification" content="5gQXbcd9_bWC5OLrMsNxzxpqdcUphZAGEaAmNuWgVRI" />    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZyCart</title>
 
@@ -246,7 +247,7 @@ box-shadow:0 -2px 10px rgba(0,0,0,0.1);
 </div>
 
 <script>
-if(!localStorage.getItem("user")) {
+if(localStorage.getItem("isLoggedIn") !== "true"){
     window.location.href = "login.html";
 }
 
@@ -284,7 +285,7 @@ function searchProduct() {
     });
 }
 function logout() {
-    localStorage.removeItem("user");
+    localStorage.removeItem("isLoggedIn");
     alert("Logged out ✅");
     window.location.href = "login.html";
 }
