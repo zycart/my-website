@@ -153,6 +153,8 @@ function placeOrder() {
     localStorage.setItem("userAddress", JSON.stringify({
         name, phone, address, city, pincode
     }));
+     
+    <button type="button" onclick="getLocation()">📍 Use My Location</button>
 
     // SAVE ORDER
     let orders = JSON.parse(localStorage.getItem("orders")) || [];
@@ -175,7 +177,8 @@ function placeOrder() {
 💰 Price: ₹${productPrice}%0A%0A
 👤 Name: ${name}%0A
 📞 Phone: ${phone}%0A
-🏠 Address: ${address}, ${city}, ${pincode}%0A%0A
+🏠 Address: ${address}, ${city}, ${pincode}
+📍 Location: ${address}
 🚚 Payment: ${paymentText}`;
 
     let whatsappNumber = "919555538841";
@@ -187,6 +190,28 @@ function placeOrder() {
     alert("Order Placed ✅");
 
     window.location.href = "success.html";
+}
+
+function getLocation() {
+    if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
+        alert("Geolocation supported nahi hai ❌");
+    }
+}
+
+function showPosition(position) {
+    let lat = position.coords.latitude;
+    let lon = position.coords.longitude;
+
+    let mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
+
+    // address field me location daal do
+    document.getElementById("address").value = mapLink;
+}
+
+function showError(error) {
+    alert("Location allow karo ❌");
 }
 
 </script>
