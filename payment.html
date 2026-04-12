@@ -31,7 +31,6 @@ button {
     color: white;
     border: none;
 }
-#upi-box { display:none; }
 </style>
 </head>
 
@@ -55,6 +54,7 @@ button {
 
 <script>
 
+// 👉 PRODUCT DATA
 const params = new URLSearchParams(window.location.search);
 const productName = params.get("name");
 const productPrice = params.get("price");
@@ -76,11 +76,15 @@ function getLocation() {
 
             alert("Location added ✅");
         });
+    } else {
+        alert("Location not supported ❌");
     }
 }
 
-// 🛒 ORDER
+// 🛒 ORDER + WHATSAPP
 function placeOrder() {
+
+    console.log("Button clicked");
 
     let name = document.getElementById("name").value;
     let phone = document.getElementById("phone").value;
@@ -93,11 +97,12 @@ function placeOrder() {
         return;
     }
 
-    // 👉 address ko map link me convert
+    // 📍 Map link
     let mapLink = userLocation 
         ? userLocation 
         : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address + " " + city + " " + pincode)}`;
 
+    // 💾 Save Order
     let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
     orders.push({
@@ -112,9 +117,34 @@ function placeOrder() {
 
     localStorage.setItem("orders", JSON.stringify(orders));
 
-    alert("Order Placed ✅");
+    // 🟢 WhatsApp Message
+    let message = `🛒 New Order - ZyCart
 
-    window.location.href = "success.html";
+📦 Product: ${productName}
+💰 Price: ₹${productPrice}
+
+👤 Name: ${name}
+📞 Phone: ${phone}
+🏠 Address: ${address}, ${city} - ${pincode}
+
+📍 Location: ${mapLink}
+
+🚚 Payment: Cash on Delivery`;
+
+    // ⚠️ IMPORTANT: apna number daal
+    let whatsappNumber = "919555538841"; 
+
+    let url = "https://wa.me/" + whatsappNumber + "?text=" + encodeURIComponent(message);
+
+    console.log(url);
+
+    // 🚀 WhatsApp open
+    window.open(url, "_blank");
+
+    // 👉 Success page bhi open ho
+    setTimeout(() => {
+        window.location.href = "success.html";
+    }, 2000);
 }
 
 </script>
