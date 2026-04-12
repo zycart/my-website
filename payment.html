@@ -34,7 +34,7 @@ input {
 button {
     width: 100%;
     padding: 15px;
-    margin-top: 15px;
+    margin-top: 10px;
     border: none;
     border-radius: 25px;
     background: linear-gradient(135deg, #667eea, #764ba2);
@@ -82,6 +82,7 @@ button {
 <input id="city" placeholder="City">
 <input id="pincode" placeholder="Pincode">
 
+<button type="button" onclick="getLocation()">📍 Use My Location</button>
 <button type="button" onclick="placeOrder()">Place Order</button>
 
 </div>
@@ -96,15 +97,15 @@ const productPrice = params.get("price");
 document.getElementById("product").innerText = productName;
 document.getElementById("price").innerText = "₹" + productPrice;
 
-// AUTO FILL
+// AUTO FILL ADDRESS
 window.onload = function() {
     const saved = JSON.parse(localStorage.getItem("userAddress"));
     if(saved){
-        name.value = saved.name;
-        phone.value = saved.phone;
-        address.value = saved.address;
-        city.value = saved.city;
-        pincode.value = saved.pincode;
+        document.getElementById("name").value = saved.name;
+        document.getElementById("phone").value = saved.phone;
+        document.getElementById("address").value = saved.address;
+        document.getElementById("city").value = saved.city;
+        document.getElementById("pincode").value = saved.pincode;
     }
 };
 
@@ -121,7 +122,7 @@ function showQR() {
 
     let upiID = "9555538841@ptyes";
     let name = "ZyCart";
-    let amount = productPrice;
+    let amount = productPrice || 0;
 
     let upiLink = `upi://pay?pa=${upiID}&pn=${name}&am=${amount}&cu=INR`;
     let qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiLink)}`;
@@ -131,6 +132,29 @@ function showQR() {
 
 function hideQR() {
     upiBox.style.display = "none";
+}
+
+// LOCATION
+let userLocation = "";
+
+function getLocation() {
+    if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
+        alert("Geolocation supported nahi hai ❌");
+    }
+}
+
+function showPosition(position) {
+    let lat = position.coords.latitude;
+    let lon = position.coords.longitude;
+
+    userLocation = `https://www.google.com/maps?q=${lat},${lon}`;
+    document.getElementById("address").value = userLocation;
+}
+
+function showError(error) {
+    alert("Location allow karo ❌");
 }
 
 // MAIN ORDER FUNCTION
@@ -153,8 +177,6 @@ function placeOrder() {
     localStorage.setItem("userAddress", JSON.stringify({
         name, phone, address, city, pincode
     }));
-     
-    <button type="button" onclick="getLocation()">📍 Use My Location</button>
 
     // SAVE ORDER
     let orders = JSON.parse(localStorage.getItem("orders")) || [];
@@ -177,11 +199,11 @@ function placeOrder() {
 💰 Price: ₹${productPrice}%0A%0A
 👤 Name: ${name}%0A
 📞 Phone: ${phone}%0A
-🏠 Address: ${address}, ${city}, ${pincode}
-📍 Location: ${address}
+🏠 Address: ${address}, ${city}, ${pincode}%0A
+📍 Location: ${userLocation}%0A
 🚚 Payment: ${paymentText}`;
 
-    let whatsappNumber = "919555538841";
+    let whatsappNumber = "919555538841"; // 👈 apna number daalna
 
     let url = `https://wa.me/${whatsappNumber}?text=${message}`;
 
@@ -190,28 +212,6 @@ function placeOrder() {
     alert("Order Placed ✅");
 
     window.location.href = "success.html";
-}
-
-function getLocation() {
-    if(navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, showError);
-    } else {
-        alert("Geolocation supported nahi hai ❌");
-    }
-}
-
-function showPosition(position) {
-    let lat = position.coords.latitude;
-    let lon = position.coords.longitude;
-
-    let mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
-
-    // address field me location daal do
-    document.getElementById("address").value = mapLink;
-}
-
-function showError(error) {
-    alert("Location allow karo ❌");
 }
 
 </script>
