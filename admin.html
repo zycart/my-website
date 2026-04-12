@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ZyCart Admin Dashboard</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #f5f5f5;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.dashboard {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    width: 200px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.orders-box {
+    background: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+}
+
+button {
+    margin: 5px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.pending { background: orange; }
+.shipped { background: blue; color:white; }
+.delivered { background: green; color:white; }
+.delete { background: red; color:white; }
+
+</style>
+</head>
+
+<body>
+
+<h1>🛠 ZyCart Admin Dashboard</h1>
+
+<div class="dashboard">
+    <div class="card">
+        <h2 id="totalOrders">0</h2>
+        <p>Total Orders</p>
+    </div>
+
+    <div class="card">
+        <h2 id="totalRevenue">₹0</h2>
+        <p>Total Revenue</p>
+    </div>
+
+    <div class="card">
+        <h2 id="pendingOrders">0</h2>
+        <p>Pending</p>
+    </div>
+
+    <div class="card">
+        <h2 id="deliveredOrders">0</h2>
+        <p>Delivered</p>
+    </div>
+</div>
+
+<div id="orders"></div>
+
+<script>
+
+// 🔐 PASSWORD PROTECTION
+let pass = prompt("Enter Admin Password");
+if(pass !== "zyfeshadab") {
+    alert("Access Denied ❌");
+    window.location.href = "index.html";
+}
+
+let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+function updateDashboard() {
+
+    let total = orders.length;
+    let revenue = 0;
+    let pending = 0;
+    let delivered = 0;
+
+    orders.forEach(order => {
+        revenue += Number(order.price);
+
+        if(order.status === "Pending") pending++;
+        if(order.status === "Delivered") delivered++;
+    });
+
+    document.getElementById("totalOrders").innerText = total;
+    document.getElementById("totalRevenue").innerText = "₹" + revenue;
+    document.getElementById("pendingOrders").innerText = pending;
+    document.getElementById("deliveredOrders").innerText = delivered;
+}
+
+function updateStatus(index, status) {
+    orders[index].status = status;
+    localStorage.setItem("orders", JSON.stringify(orders));
+    loadOrders();
+}
+
+function deleteOrder(index) {
+    if(confirm("Delete this order?")) {
+        orders.splice(index, 1);
+        localStorage.setItem("orders", JSON.stringify(orders));
+        loadOrders();
+    }
+}
+
+function loadOrders() {
+
+    updateDashboard();
+
+    let html = "";
+
+    orders.forEach((order, index) => {
+        html += `
+        <div class="orders-box">
+            <h3>📦 ${order.product}</h3>
+            <p>💰 ₹${order.price}</p>
+
+            <hr>
+
+            <p>👤 Name: ${order.name || "N/A"}</p>
+            <p>📞 Phone: ${order.phone || "N/A"}</p>
+            <p>🏠 Address: ${order.address}</p>
+            <p>📍 ${
+    order.location && order.location !== "Not provided"
+    ? `<a href="${order.location}" target="_blank">View Location</a>`
+    : "Location not available"
+}</p>
+<p>📍 ${
+    order.location 
+    ? `<a href="${order.location}" target="_blank">Open Map</a>`
+    : "No location"
+}</p>
+            <p>💳 Payment: ${order.payment}</p>
+
+            <p>Status: <b>${order.status}</b></p>
+
+            <button class="pending" onclick="updateStatus(${index}, 'Pending')">Pending</button>
+            <button class="shipped" onclick="updateStatus(${index}, 'Shipped')">Shipped</button>
+            <button class="delivered" onclick="updateStatus(${index}, 'Delivered')">Delivered</button>
+            <button class="delete" onclick="deleteOrder(${index})">Delete</button>
+        </div>
+        `;
+    });
+
+    document.getElementById("orders").innerHTML = html;
+}
+
+loadOrders();
+
+</script>
+
+</body>
+</html>
