@@ -247,7 +247,9 @@ box-shadow:0 -2px 10px rgba(0,0,0,0.1);
 </div>
 
 <script>
-if(localStorage.getItem("isLoggedIn") !== "true"){
+let user = localStorage.getItem("user");
+
+if(!user || user === "null") {
     window.location.href = "login.html";
 }
 
