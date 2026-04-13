@@ -65,11 +65,12 @@ if(user){
 }
 
 // logout function
+<script>
 function logout() {
     localStorage.removeItem("user");
-    alert("Logged out ❌");
     window.location.href = "login.html";
 }
+</script>
 
 // home button
 function goHome() {
