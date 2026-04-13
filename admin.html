@@ -100,12 +100,13 @@ function updateDashboard() {
     let pending = 0;
     let delivered = 0;
 
-    orders.forEach(order => {
-        revenue += Number(order.price);
+  orders.forEach(order => {
+    let price = Number(order.price) || 0;
+    revenue += price;
 
-        if(order.status === "Pending") pending++;
-        if(order.status === "Delivered") delivered++;
-    });
+    if(order.status === "Pending") pending++;
+    if(order.status === "Delivered") delivered++;
+});
 
     document.getElementById("totalOrders").innerText = total;
     document.getElementById("totalRevenue").innerText = "₹" + revenue;
