@@ -56,8 +56,8 @@ button {
 
 // 👉 PRODUCT DATA
 const params = new URLSearchParams(window.location.search);
-const productName = params.get("name");
-const productPrice = params.get("price");
+const productName = params.get("name") || "Unknown Product";
+const productPrice = Number(params.get("price")) || 0;
 
 document.getElementById("product").innerText = productName;
 document.getElementById("price").innerText = "₹" + productPrice;
@@ -106,14 +106,14 @@ function placeOrder() {
     let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
     orders.push({
-        product: productName,
-        price: productPrice,
-        name: name,
-        phone: phone,
-        address: address + ", " + city + " - " + pincode,
-        location: mapLink,
-        status: "Pending"
-    });
+    product: productName,
+    price: productPrice,
+    name,
+    phone,
+    address: address + ", " + city + " - " + pincode,
+    location: mapLink,
+    status: "Pending"
+});
 
     localStorage.setItem("orders", JSON.stringify(orders));
 
