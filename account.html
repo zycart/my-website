@@ -55,23 +55,20 @@ button {
 </div>
 
 <script>
-// user show karne ke liye
 let user = JSON.parse(localStorage.getItem("user"));
+let isLoggedIn = localStorage.getItem("isLoggedIn");
 
-if(user){
-    document.getElementById("user-email").innerText = user.email;
+if(!user || isLoggedIn !== "true"){
+    window.location.href = "login.html";
 } else {
-    window.location.href = "login.html";
+    document.getElementById("user-email").innerText = user.email;
 }
 
-// logout function
-<script>
 function logout() {
-    localStorage.removeItem("user");
+    localStorage.removeItem("isLoggedIn");
     window.location.href = "login.html";
 }
 
-// home button
 function goHome() {
     window.location.href = "index.html";
 }
